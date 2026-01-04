@@ -1,4 +1,5 @@
 Product Name: E-Tan IMS
+
 Version: v0.1 (The document is subject to change)
 
 # Introduction
@@ -44,7 +45,9 @@ The interface will be divided into 2 parts
 - Top Panel
 
 Main Screen will house the information pertaining to that particular menu
+
 Side Panel will allow the user to change between different menus
+
 Top Panel will house the Application Logo, Search Bar and Profile Menu
 
 ### Administrator Interface
@@ -79,12 +82,15 @@ The profile menu will list out the user data like their PID, email and password
 ### Software Interface
 
 The software is a web application using Django Framework on a python 3+ environment
+
 The backend will be hosted on a linux based server with support for a SQL server
 
 ### Communication Interface
 
 The User Interface will be access via a modern web browser using HTTPS connection
+
 The frontend and backend will communicate via RESTful APIs in JSON format
+
 User login and data will be protected via JWT based authentication
 
 ## Constraints, Assumption, Dependencies
@@ -96,6 +102,7 @@ The user will be given five attempts to enter the password , if it fails then th
 ### Assumption
 
 The customer will be student of SFIT with a valid PID number
+
 The user will have a reliable internet connection and will be operating the website on a desktop system
 
 ## User Characteristics
@@ -106,9 +113,10 @@ The program is made to accomodate two types of users
 
 # System Feature and Requirement
 
-## Functional Requirement
+# Functional Requirement
 
 The admin will be able to update the view and update the inventory and allow order confirmation
+
 The customer will be able to view the inventory and book an item
 
 ## External Interfaces
@@ -120,4 +128,5 @@ A RDBMS database like MySQL or Postgresql will be used
 # Future Scope
 
 There will be a mobile friendly version of the site
+
 Password will be resetted over email
