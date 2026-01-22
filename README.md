@@ -7,14 +7,12 @@ E-Tan IMS is a specialized platform developed for SFIT ECS and ExTC branch stude
 Before starting development or contributing, please review the core documentation in the `./docs` directory to understand the system architecture and project scope:
 
 * **[SRS (Software Requirements Specification)](./docs/SRS.md)**: Detailed functional requirements, user roles, and system constraints.
-* **ERD (Entity Relationship Diagram)**: The database schema outlining how Users, Products, and Orders interact.
+* **[ERD (Entity Relationship Diagram)](./docs/ERD.dbml)**: The database schema outlining how Users, Products, and Orders interact.
 
 ## Tech Stack
 
-* **Frontend**: Django Templates
-* **Backend**: Django (Python 3+)
-* **Database**: PostgreSQL / MySQL
-* **Authentication**: JWT (JSON Web Tokens)
+**Framework:** Django (Python) 
+**Database:** SQLite (For Dev)
 
 ## Contribution Guidelines
 
