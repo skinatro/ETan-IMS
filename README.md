@@ -11,7 +11,7 @@ Before starting development or contributing, please review the core documentatio
 
 ## Tech Stack
 
-* **Frontend**: ReactJs & Tailwind CSS
+* **Frontend**: Django Templates
 * **Backend**: Django (Python 3+)
 * **Database**: PostgreSQL / MySQL
 * **Authentication**: JWT (JSON Web Tokens)
