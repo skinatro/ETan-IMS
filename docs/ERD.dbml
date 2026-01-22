@@ -39,6 +39,8 @@ Table product{
   rental_rate integer [not null, default: 0]
   product_image varchar
   member_rate integer [not null]
+  created_at timestamp
+
 }
 
 Table order{
