@@ -3,7 +3,7 @@
 
 //Project: E-Tan IMS
 //Author: Om Kate
-//Ver: v1.0
+//Ver: v2.0
 
 // Enum Definitions
 enum user_role {
@@ -19,10 +19,30 @@ enum order_status {
   returned
 }
 
-// Table Definition
-Table user{
+enum component_category {
+  AC [note: 'Active Components']
+  PAS [note: 'Passive Components']
+  SEMIC [note: 'Semiconductor Devices']
+  PS [note: 'Power Supplies']
+  EMECH [note: 'Electromechanical Components']
+  SENS [note: 'Sensors']
+  MC [note: 'Microcontrollers']
+  DLC [note: 'Digital Logic Components']
+  COMM [note: 'Communication Modules']
+  DISP [note: 'Display Devices']
+  SWITCH [note: 'Switches and Protective Devices']
+  CONN [note: 'Connectors and Interfacing']
+  WIRE [note: 'Wiring and Cables']
+  PCB [note: 'PCB and Prototypes']
+  MECH [note: 'Mechanical Components']
+  TOOL [note: 'Tools and Test Equipment']
+  MISC [note: 'Miscellaneous']
+}
+
+// Table Definitions
+Table user {
   user_id integer [primary key]
-  name varchar
+  username varchar [not null, unique]
   email varchar [not null, unique]
   password_hash varchar [not null]
   pid integer [unique]
@@ -31,40 +51,41 @@ Table user{
   is_member bool [default: false]
 }
 
-Table product{
-  product_id integer [primary key]
+Table component {
+  component_id integer [primary key]
   name varchar [not null]
+  category component_category [not null, default: 'MISC']
   quantity integer [not null, default: 0]
-  is_rentable bool [not null]
+  is_rentable bool [not null, default: true]
   rental_rate integer [not null, default: 0]
   product_image varchar
-  member_rate integer [not null]
+  datasheet_url varchar
+  description text [default: 'Component Specifications here']
+  location varchar [not null, default: 'Cupboard']
   created_at timestamp
-
 }
 
-Table order{
+Table order {
   order_id integer [primary key]
-  user_id integer [not null]//FK
+  user_id integer [not null]
   status order_status [not null, default: 'booked']
   created_at timestamp [not null]
   decided_at timestamp
   returned_at timestamp
 }
 
-Table order_item{
+Table order_item {
   order_item_id integer [primary key]
-  order_id integer [not null]//FK
-  product_id integer [not null]//FK
+  order_id integer [not null]
+  component_id integer [not null]
   quantity integer [not null, default: 1]
 
   indexes {
-    (order_id, product_id) [unique]
+    (order_id, component_id) [unique]
   }
 }
 
 // Relationships
 Ref: order.user_id > user.user_id
 Ref: order_item.order_id > order.order_id
-Ref: order_item.product_id > product.product_id 
-Ref: "user"."user_id" < "user"."email"
+Ref: order_item.component_id > component.component_id
