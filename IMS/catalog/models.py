@@ -2,7 +2,26 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-# Create your models here.
+from django.contrib.auth.models import AbstractUser
+
+
+class User(AbstractUser):
+    class Role(models.TextChoices):
+        ADMIN = "admin", _("Admin")
+        CUSTOMER = "customer", _("Customer")
+
+    pid = models.IntegerField(unique=True, null=True, blank=True)
+    role = models.CharField(
+        max_length=10, choices=Role, default=Role.CUSTOMER
+    )
+    phone_number = models.CharField(
+        max_length=10, unique=True, null=True, blank=True
+    )
+    is_member = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.email or self.username
+
 
 class Component(models.Model):
     class Category(models.TextChoices):
@@ -38,7 +57,3 @@ class Component(models.Model):
 
     def __str__(self):
         return self.name
-    
-
-
-
