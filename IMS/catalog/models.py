@@ -57,3 +57,43 @@ class Component(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Order(models.Model):
+    class Status(models.TextChoices):
+        BOOKED = "booked", _("Booked")
+        ACCEPTED = "accepted", _("Accepted")
+        REJECTED = "rejected", _("Rejected")
+        CANCELLED = "cancelled", _("Cancelled")
+        RETURNED = "returned", _("Returned")
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="orders",
+    )
+    status = models.CharField(
+        max_length=10, choices=Status, default=Status.BOOKED
+    )
+    created_at = models.DateTimeField(default=timezone.now, editable=False)
+    decided_at = models.DateTimeField(null=True, blank=True)
+    returned_at = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Order #{self.pk} - {self.user}"
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(
+        Order, on_delete=models.CASCADE, related_name="items"
+    )
+    component = models.ForeignKey(
+        Component, on_delete=models.CASCADE, related_name="order_items"
+    )
+    quantity = models.IntegerField(default=1)
+
+    class Meta:
+        unique_together = ("order", "component")
+
+    def __str__(self):
+        return f"{self.component.name} x{self.quantity}"
