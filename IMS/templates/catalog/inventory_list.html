@@ -1,0 +1,38 @@
+{% extends "catalog/base.html" %}
+{% block title %}Inventory - E-Tan IMS{% endblock %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;">
+    <h2>Inventory</h2>
+    <div>
+        {% if show_all %}
+            <a href="{% url 'inventory_list' %}" class="btn btn-secondary">Show Available Only</a>
+        {% else %}
+            <a href="{% url 'inventory_list' %}?show_all=1" class="btn btn-secondary">Show All</a>
+        {% endif %}
+    </div>
+</div>
+<div class="card" style="margin-top:16px;">
+    <table>
+        <thead><tr><th>Name</th><th>Category</th><th>Qty</th><th>Rate</th><th>Rentable</th><th></th></tr></thead>
+        <tbody>
+        {% for c in components %}
+        <tr>
+            <td>{{ c.name }}</td>
+            <td>{{ c.get_category_display }}</td>
+            <td>{{ c.quantity }}</td>
+            <td>{{ c.rental_rate }}</td>
+            <td>{{ c.is_rentable|yesno:"Yes,No" }}</td>
+            <td>
+                <a href="{% url 'component_detail' c.pk %}" class="btn btn-secondary">View</a>
+                {% if c.is_rentable and c.quantity > 0 %}
+                    <a href="{% url 'order_create' c.pk %}" class="btn btn-primary">Rent</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">No components found.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

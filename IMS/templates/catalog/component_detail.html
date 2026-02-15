@@ -1,0 +1,30 @@
+{% extends "catalog/base.html" %}
+{% block title %}{{ component.name }} - E-Tan IMS{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>{{ component.name }}</h2>
+    <table>
+        <tr><th>Category</th><td>{{ component.get_category_display }}</td></tr>
+        <tr><th>Quantity</th><td>{{ component.quantity }}</td></tr>
+        <tr><th>Rental Rate</th><td>{{ component.rental_rate }}</td></tr>
+        <tr><th>Rentable</th><td>{{ component.is_rentable|yesno:"Yes,No" }}</td></tr>
+        <tr><th>Location</th><td>{{ component.location }}</td></tr>
+        <tr><th>Description</th><td>{{ component.description }}</td></tr>
+        {% if component.datasheet_url %}
+        <tr><th>Datasheet</th><td><a href="{{ component.datasheet_url }}" target="_blank">View Datasheet</a></td></tr>
+        {% endif %}
+        {% if component.product_image %}
+        <tr><th>Image</th><td><img src="{{ component.product_image.url }}" alt="{{ component.name }}" style="max-width:300px;"></td></tr>
+        {% endif %}
+    </table>
+    <div style="margin-top:16px;">
+        {% if component.is_rentable and component.quantity > 0 %}
+            <a href="{% url 'order_create' component.pk %}" class="btn btn-primary">Rent This</a>
+        {% endif %}
+        {% if user.role == "admin" %}
+            <a href="{% url 'component_edit' component.pk %}" class="btn btn-secondary">Edit</a>
+        {% endif %}
+        <a href="{% url 'inventory_list' %}" class="btn btn-secondary">Back to Inventory</a>
+    </div>
+</div>
+{% endblock %}

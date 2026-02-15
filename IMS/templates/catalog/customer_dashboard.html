@@ -1,0 +1,23 @@
+{% extends "catalog/base.html" %}
+{% block title %}Dashboard - E-Tan IMS{% endblock %}
+{% block content %}
+<h2>My Dashboard</h2>
+<div class="card">
+    <h3>My Orders</h3>
+    <table>
+        <thead><tr><th>ID</th><th>Status</th><th>Date</th><th></th></tr></thead>
+        <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>#{{ order.id }}</td>
+            <td><span class="badge badge-{{ order.status }}">{{ order.get_status_display }}</span></td>
+            <td>{{ order.created_at|date:"d M Y H:i" }}</td>
+            <td><a href="{% url 'order_detail' order.pk %}" class="btn btn-secondary">View</a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">No orders yet. Browse the <a href="{% url 'inventory_list' %}">inventory</a> to get started.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
