@@ -1,0 +1,18 @@
+{% extends "catalog/base.html" %}
+{% block title %}Rent {{ component.name }} - E-Tan IMS{% endblock %}
+{% block content %}
+<div class="card" style="max-width:450px;">
+    <h2>Rent: {{ component.name }}</h2>
+    <p>Rate: {{ component.rental_rate }} | Available: {{ component.quantity }}</p>
+    <form method="post" style="margin-top:16px;">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Quantity</label>
+            <input type="number" name="quantity" value="1" min="1" max="{{ component.quantity }}">
+        </div>
+        <input type="hidden" name="component" value="{{ component.pk }}">
+        <button type="submit" class="btn btn-primary">Place Order</button>
+        <a href="{% url 'component_detail' component.pk %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

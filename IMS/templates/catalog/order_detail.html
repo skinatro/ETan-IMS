@@ -1,0 +1,36 @@
+{% extends "catalog/base.html" %}
+{% block title %}Order #{{ order.id }} - E-Tan IMS{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>Order #{{ order.id }}</h2>
+    <table>
+        <tr><th>Student</th><td>{{ order.user.username }}</td></tr>
+        <tr><th>Status</th><td><span class="badge badge-{{ order.status }}">{{ order.get_status_display }}</span></td></tr>
+        <tr><th>Placed</th><td>{{ order.created_at|date:"d M Y H:i" }}</td></tr>
+        {% if order.decided_at %}<tr><th>Decided</th><td>{{ order.decided_at|date:"d M Y H:i" }}</td></tr>{% endif %}
+        {% if order.returned_at %}<tr><th>Returned</th><td>{{ order.returned_at|date:"d M Y H:i" }}</td></tr>{% endif %}
+    </table>
+    <h3 style="margin-top:20px;">Items</h3>
+    <table>
+        <thead><tr><th>Component</th><th>Quantity</th></tr></thead>
+        <tbody>
+        {% for item in items %}
+        <tr>
+            <td><a href="{% url 'component_detail' item.component.pk %}">{{ item.component.name }}</a></td>
+            <td>{{ item.quantity }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div style="margin-top:16px;">
+        {% if user.role == "admin" and order.status == "booked" %}
+            <a href="{% url 'order_accept' order.pk %}" class="btn btn-success">Accept</a>
+            <a href="{% url 'order_reject' order.pk %}" class="btn btn-danger">Reject</a>
+        {% endif %}
+        {% if order.user == user and order.status == "booked" %}
+            <a href="{% url 'order_cancel' order.pk %}" class="btn btn-danger">Cancel</a>
+        {% endif %}
+        <a href="{% url 'order_list' %}" class="btn btn-secondary">Back to Orders</a>
+    </div>
+</div>
+{% endblock %}

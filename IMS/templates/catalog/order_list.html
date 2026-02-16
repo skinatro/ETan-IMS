@@ -1,0 +1,23 @@
+{% extends "catalog/base.html" %}
+{% block title %}Orders - E-Tan IMS{% endblock %}
+{% block content %}
+<h2>Orders</h2>
+<div class="card" style="margin-top:16px;">
+    <table>
+        <thead><tr><th>ID</th>{% if user.role == "admin" %}<th>Student</th>{% endif %}<th>Status</th><th>Date</th><th></th></tr></thead>
+        <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>#{{ order.id }}</td>
+            {% if user.role == "admin" %}<td>{{ order.user.username }}</td>{% endif %}
+            <td><span class="badge badge-{{ order.status }}">{{ order.get_status_display }}</span></td>
+            <td>{{ order.created_at|date:"d M Y H:i" }}</td>
+            <td><a href="{% url 'order_detail' order.pk %}" class="btn btn-secondary">View</a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">No orders found.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
