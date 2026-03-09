@@ -1,9 +1,64 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.utils.html import format_html
+from django.urls import path
+from django.shortcuts import redirect
 from .models import Component, User, Order, OrderItem
 
 # Register your models here.
-admin.site.register(Component)
+@admin.register(Component)
+class ComponentAdmin(admin.ModelAdmin):
+    list_display = ("name", "category", "quantity", "quick_quantity_actions", "rental_rate", "etan_rate_display", "location")
+    readonly_fields = ("product_image_preview",)
+    
+    fieldsets = (
+        (None, {
+            "fields": (
+                "product_image_preview", "product_image", "name", "category", 
+                "quantity", "is_rentable", "rental_rate", "datasheet_url", 
+                "description", "location"
+            )
+        }),
+    )
+
+    def product_image_preview(self, obj):
+        if obj.product_image:
+            return format_html('<img src="{}" style="max-height: 200px; margin-bottom: 10px;"/>', obj.product_image.url)
+        return "No Image"
+    product_image_preview.short_description = "Image Preview"
+
+    def etan_rate_display(self, obj):
+        return obj.etan_rate
+    etan_rate_display.short_description = "E-Tan Rate"
+
+    def quick_quantity_actions(self, obj):
+        return format_html(
+            '<a class="button" style="margin-right: 5px;" href="{}">+5</a>'
+            '<a class="button" href="{}">-5</a>',
+            f"{obj.pk}/add-qty/",
+            f"{obj.pk}/sub-qty/"
+        )
+    quick_quantity_actions.short_description = "Quick Qty"
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('<int:pk>/add-qty/', self.admin_site.admin_view(self.add_qty_view), name='component-add-qty'),
+            path('<int:pk>/sub-qty/', self.admin_site.admin_view(self.sub_qty_view), name='component-sub-qty'),
+        ]
+        return custom_urls + urls
+
+    def add_qty_view(self, request, pk):
+        comp = Component.objects.get(pk=pk)
+        comp.quantity += 5
+        comp.save()
+        return redirect('..')
+
+    def sub_qty_view(self, request, pk):
+        comp = Component.objects.get(pk=pk)
+        comp.quantity -= 5
+        comp.save()
+        return redirect('..')
 
 
 @admin.register(User)

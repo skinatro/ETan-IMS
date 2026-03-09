@@ -13,7 +13,7 @@
 </div>
 <div class="card" style="margin-top:16px;">
     <table>
-        <thead><tr><th>Name</th><th>Category</th><th>Qty</th><th>Rate</th><th>Rentable</th><th></th></tr></thead>
+        <thead><tr><th>Name</th><th>Category</th><th>Qty</th><th>Rate</th><th>E-Tan Rate</th><th>Rentable</th><th></th></tr></thead>
         <tbody>
         {% for c in components %}
         <tr>
@@ -21,6 +21,7 @@
             <td>{{ c.get_category_display }}</td>
             <td>{{ c.quantity }}</td>
             <td>{{ c.rental_rate }}</td>
+            <td>{{ c.etan_rate }}</td>
             <td>{{ c.is_rentable|yesno:"Yes,No" }}</td>
             <td>
                 <a href="{% url 'component_detail' c.pk %}" class="btn btn-secondary">View</a>

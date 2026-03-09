@@ -55,6 +55,10 @@ class Component(models.Model):
     description = models.TextField(default="Component Specifications here")
     location = models.CharField(max_length=255, null=False, default="Cupboard")    
 
+    @property
+    def etan_rate(self):
+        return int(self.rental_rate * 0.9)
+
     def __str__(self):
         return self.name
 
