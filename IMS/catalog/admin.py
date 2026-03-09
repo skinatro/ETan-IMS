@@ -1,4 +1,4 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.html import format_html
 from django.urls import path
@@ -45,6 +45,7 @@ class ComponentAdmin(admin.ModelAdmin):
         custom_urls = [
             path('<int:pk>/add-qty/', self.admin_site.admin_view(self.add_qty_view), name='component-add-qty'),
             path('<int:pk>/sub-qty/', self.admin_site.admin_view(self.sub_qty_view), name='component-sub-qty'),
+            path('barcode-scan/', self.admin_site.admin_view(self.barcode_scan_view), name='component-barcode-scan'),
         ]
         return custom_urls + urls
 
@@ -58,6 +59,33 @@ class ComponentAdmin(admin.ModelAdmin):
         comp = Component.objects.get(pk=pk)
         comp.quantity -= 5
         comp.save()
+        return redirect('..')
+
+    def barcode_scan_view(self, request):
+        if request.method == 'POST':
+            barcode = request.POST.get('barcode', '').strip()
+            if barcode:
+                if '-' in barcode:
+                    cat, name = barcode.split('-', 1)
+                    valid_cats = [choice[0] for choice in Component.Category.choices]
+                    cat_final = cat if cat in valid_cats else Component.Category.MISC
+                    
+                    component, created = Component.objects.get_or_create(
+                        name=name,
+                        defaults={'category': cat_final, 'quantity': 1}
+                    )
+                    
+                    if not created:
+                        component.quantity += 1
+                        component.save()
+                        self.message_user(request, f"Incremented quantity of {name} to {component.quantity}", level=messages.SUCCESS)
+                    else:
+                        self.message_user(request, f"Successfully added {cat}-{name}", level=messages.SUCCESS)
+                else:
+                    self.message_user(request, "Invalid barcode format. Expected <cat>-<name>", level=messages.ERROR)
+            else:
+                self.message_user(request, "Empty barcode submitted.", level=messages.WARNING)
+                
         return redirect('..')
 
 

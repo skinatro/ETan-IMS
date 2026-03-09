@@ -41,6 +41,8 @@ class Component(models.Model):
         PCB = "PCB", _("PCB and Prototypes")
         MECH = "MECH", _("Mechanical Componenets")
         TOOL = "TOOL", _("Tools and Test Equipment")
+        DRV = "DRV", _("Drivers and Controllers")
+        PWR = "PWR", _("Power Modules")
         MISC = "MISC", _("Miscellaneous")
 
     name = models.CharField(max_length=255, null=False)
